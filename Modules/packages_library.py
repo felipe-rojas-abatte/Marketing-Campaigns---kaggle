@@ -35,3 +35,9 @@ stop_words = set(stopwords.words('spanish')) # Remove useless words
 spanishstemmer = SnowballStemmer('spanish')
 
 import warnings
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import RandomizedSearchCV

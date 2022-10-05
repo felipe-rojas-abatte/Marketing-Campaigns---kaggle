@@ -77,7 +77,7 @@ def Clean_raw_data(df_init):
               print('Warning. Duplicate values were removed')
 
     n_df_end = len(df_clean)
-    print('\nNº rows \nafter cleaning: {}    before cleaning:{} \n'.format(n_df_init, n_df_end))
+    print('\nNº rows \nbefore cleaning: {}    after cleaning:{} \n'.format(n_df_init, n_df_end))
 
     final_time = time.time() - start_time
     if (final_time < 60.0): print('time final = {:.2f} seconds'.format(final_time))
@@ -85,88 +85,4 @@ def Clean_raw_data(df_init):
     if (final_time >= 3600): print('time final = {:.2f}'.format(final_time/3600.0))
     return df
 
-###########################################
-####### Module for processing Data ########
-###########################################
 
-def Process_search_data(df_init):
-    start_time = time.time()
-    df = df_init.copy()
-
-    # Agrupamos por producto, numero de tienda, y correlation id
-    # Calculamos maxima pagina de busqueda, Nº productos aparecidos en busqueda
-    #first_process = df.groupby(['exact_search','request_store_number','correlation_id']).aggregate({'request_page_number':'max','response_total':'mean'}).rename(columns={'request_page_number':'max_request_page_number'})
-    #first_process = first_process.reset_index()
-
-    # Agrupamos por producto, numero de tienda
-    # Calculamos promedio, percentil (10,25,50,75,90) de maxima pagina de busqueda por producto, promedio de Nº productos aparecidos en busqueda, Nº de clientes que buscaron producto
-    #second_process = df.groupby(['exact_search','request_store_number']).aggregate({'request_page_number':['mean', libreria.q10, libreria.q25, libreria.q50, libreria.q75, libreria.q90],'response_total':'mean','correlation_id':'count'}).rename(columns={'response_total':'promedio_productos_encontrados','correlation_id':'cant_busquedas_por_local'})
-    #second_process = df.groupby(['scl_created_date']).aggregate({'request_page_number':['mean', libreria.q10, libreria.q25, libreria.q50, libreria.q75, libreria.q90],'response_total':'mean','correlation_id':'count'}).rename(columns={'response_total':'promedio_productos_encontrados','correlation_id':'cant_busquedas_por_local'})
-    second_process = df.groupby(['exact_search','request_store_number']).aggregate({'request_page_number':'mean','response_total':'mean','correlation_id':'count'}).rename(columns={'response_total':'promedio_productos_encontrados','correlation_id':'cant_busquedas_por_local'})
-    second_process = second_process.reset_index()
-
-    final_time = time.time() - start_time
-    if (final_time < 60.0): print('time final = {:.2f} seconds'.format(final_time))
-    if (final_time >= 60.0 and final_time < 3600): print('time final = {:.2f} minutes'.format(final_time/60.0))
-    if (final_time >= 3600): print('time final = {:.2f}'.format(final_time/3600.0))
-    return second_process
-
-def Process_search_per_store(df_init):
-    start_time = time.time()
-    df = df_init.copy()
-
-    # Agrupamos por producto, numero de tienda, y correlation id
-    # Calculamos maxima pagina de busqueda, Nº productos aparecidos en busqueda
-    first_process = df.groupby(['exact_search','request_store_number','correlation_id']).aggregate({'request_page_number':'max','response_total':'mean'}).rename(columns={'request_page_number':'max_request_page_number'})
-    first_process = first_process.reset_index()
-
-    # Agrupamos por producto, numero de tienda
-    # Calculamos promedio, percentil (10,25,50,75,90) de maxima pagina de busqueda por producto, promedio de Nº productos aparecidos en busqueda, Nº de clientes que buscaron producto
-    second_process = first_process.groupby(['exact_search','request_store_number']).aggregate({'max_request_page_number':['mean', libreria.q10, libreria.q25, libreria.q50, libreria.q75, libreria.q90],'response_total':'mean','correlation_id':'count'}).rename(columns={'response_total':'promedio_productos_encontrados','correlation_id':'cant_busquedas_por_local'})
-    second_process = second_process.reset_index()
-
-    final_time = time.time() - start_time
-    if (final_time < 60.0): print('time final = {:.2f} seconds'.format(final_time))
-    if (final_time >= 60.0 and final_time < 3600): print('time final = {:.2f} minutes'.format(final_time/60.0))
-    if (final_time >= 3600): print('time final = {:.2f}'.format(final_time/3600.0))
-    return second_process
-
-def Process_search_per_date(df_init):
-    start_time = time.time()
-    df = df_init.copy()
-
-    # Agrupamos por producto, numero de tienda, y correlation id
-    # Calculamos maxima pagina de busqueda, Nº productos aparecidos en busqueda
-    first_process = df.groupby(['scl_created_date','exact_search','correlation_id']).aggregate({'request_page_number':'max','response_total':'mean'}).rename(columns={'request_page_number':'max_request_page_number'})
-    first_process = first_process.reset_index()
-
-    # Agrupamos por producto, numero de tienda
-    # Calculamos promedio, percentil (10,25,50,75,90) de maxima pagina de busqueda por producto, promedio de Nº productos aparecidos en busqueda, Nº de clientes que buscaron producto
-    second_process = first_process.groupby(['scl_created_date','exact_search']).aggregate({'max_request_page_number':['mean', libreria.q10, libreria.q25, libreria.q50, libreria.q75, libreria.q90],'response_total':'mean','correlation_id':'count'}).rename(columns={'response_total':'promedio_productos_encontrados','correlation_id':'cant_busquedas_por_local'})
-    second_process = second_process.reset_index()
-
-    final_time = time.time() - start_time
-    if (final_time < 60.0): print('time final = {:.2f} seconds'.format(final_time))
-    if (final_time >= 60.0 and final_time < 3600): print('time final = {:.2f} minutes'.format(final_time/60.0))
-    if (final_time >= 3600): print('time final = {:.2f}'.format(final_time/3600.0))
-    return second_process
-
-def Process_search_per_date_total(df_init):
-    start_time = time.time()
-    df = df_init.copy()
-
-    # Agrupamos por producto, numero de tienda, y correlation id
-    # Calculamos maxima pagina de busqueda, Nº productos aparecidos en busqueda
-    first_process = df.groupby(['scl_created_date','correlation_id']).aggregate({'request_page_number':'max','response_total':'mean'}).rename(columns={'request_page_number':'max_request_page_number'})
-    first_process = first_process.reset_index()
-
-    # Agrupamos por producto, numero de tienda
-    # Calculamos promedio, percentil (10,25,50,75,90) de maxima pagina de busqueda por producto, promedio de Nº productos aparecidos en busqueda, Nº de clientes que buscaron producto
-    second_process = first_process.groupby(['scl_created_date']).aggregate({'max_request_page_number':['mean', libreria.q10, libreria.q25, libreria.q50, libreria.q75, libreria.q90],'response_total':'mean','correlation_id':'count'}).rename(columns={'response_total':'promedio_productos_encontrados','correlation_id':'cant_busquedas_por_local'})
-    second_process = second_process.reset_index()
-
-    final_time = time.time() - start_time
-    if (final_time < 60.0): print('time final = {:.2f} seconds'.format(final_time))
-    if (final_time >= 60.0 and final_time < 3600): print('time final = {:.2f} minutes'.format(final_time/60.0))
-    if (final_time >= 3600): print('time final = {:.2f}'.format(final_time/3600.0))
-    return second_process

@@ -1,10 +1,9 @@
 from packages_library import *
 import functions_library
 
-colors = ['limegreen','royalblue','darkorange','m','b','orange','r','blueviolet','cyan','g','y','darkred','lightpink','grey','deepskyblue','k']
    
-
-def Histogram_plot(ax, df, title_name, xaxis_name, yaxis_name, min_bin, max_bin, bin_size, log_axis, stats):   
+def Histogram_plot(ax, df, title_name, xaxis_name, yaxis_name, min_bin, max_bin, bin_size, log_axis, stats):  
+    ''' Compute an 1-D histogram with '''
     ax.set_title(title_name, size=20, color='k')
     plt.xlabel(xaxis_name, fontsize=18)
     plt.ylabel(yaxis_name, fontsize=18)
@@ -21,11 +20,12 @@ def Histogram_plot(ax, df, title_name, xaxis_name, yaxis_name, min_bin, max_bin,
     max_y_val = max(y_axis)
     
     main_values = df.describe() 
-    media = main_values['mean']
-    Q1 = main_values['25%']
-    Q2 = main_values['50%']
-    Q3 = main_values['75%']
+    media = main_values['mean'] # Mean value
+    Q1 = main_values['25%']     # Percentile 25
+    Q2 = main_values['50%']     # Percentile 50
+    Q3 = main_values['75%']     # Percentile 75
     
+    ## Show the descriptive values computed above on the upper right sector of the plot
     if stats:
         if log_axis:
             ax.text(max_val*0.8, max_y_val*1.0, '25%: {:.2f}'.format(Q1), size=10, color='k')
@@ -53,7 +53,7 @@ def Barh_plot(ax, df, title_name):
     plt.barh(categories, values_perc, color ='royalblue')
     
     for i, v in enumerate(values_perc):
-        ax.text(v+0.2, i, str(round(v, 1))+'%', color='k', va="center")
+        ax.text(v+0.2, i, str(round(v, 2))+'%', color='k', va="center")
  
     ax.spines['right'].set_color('w')
     ax.spines['bottom'].set_color('w')
@@ -75,7 +75,7 @@ def Barh_plot_custom_list(ax, df, title_name, list_of_bars):
     plt.barh(list_of_bars, values_perc, color ='royalblue')
     
     for i, v in enumerate(values_perc):
-        ax.text(v+0.2, i, str(round(v, 1))+'%', color='k', va="center")
+        ax.text(v+0.2, i, str(round(v, 2))+'%', color='k', va="center")
  
     ax.spines['right'].set_color('w')
     ax.spines['bottom'].set_color('w')
@@ -93,7 +93,7 @@ def Pie_plot(ax, df, title_name, explode, colors):
     ax.pie(values, explode=explode, labels=categories, autopct='%1.2f%%', shadow=True, startangle=0, colors= colors, textprops={'fontsize': 12})
 
 def Plot_bank_client_data(arg00, arg01, arg02, arg03, arg10, arg11, arg12):
-    
+    ''' Show a dashboard with all features related to bank client data '''
     fig = plt.figure(figsize=(25,15))
     gs = GridSpec(nrows=2, ncols=4, width_ratios=[1, 1, 1, 1], height_ratios=[1, 1])
     gs.update(wspace = 0.3, hspace = 0.45)
@@ -172,10 +172,10 @@ def Plot_bank_client_data(arg00, arg01, arg02, arg03, arg10, arg11, arg12):
     explode = (0, 0, 0)
     Pie_plot(ax12, df12, title_name, explode, colors)
     
-    return
+    return plt.savefig('Plots/Bank_cliente_plot.pdf', bbox_inches='tight')
 
 def Plot_last_contact_data(arg00, arg01, arg10, arg11):
-    
+    ''' Show a dashboard with all features related to the last contact of the current campaign '''
     fig = plt.figure(figsize=(10,10))
     gs = GridSpec(nrows=2, ncols=2, width_ratios=[1, 1], height_ratios=[1, 1])
     gs.update(wspace = 0.3, hspace = 0.45)
@@ -234,10 +234,10 @@ def Plot_last_contact_data(arg00, arg01, arg10, arg11):
     
     Histogram_plot(ax11, df11, title_name, xaxis_name, yaxis_name, min_bin, max_bin, bin_size, log_axis, stats)
 
-    return
+    return plt.savefig('Plots/Last_contact_plot.pdf', bbox_inches='tight')
 
 def Plot_other_attributes_data(arg00, arg01, arg10, arg11):
-    
+    ''' Show a dashboard with all features related to other attributes'''
     fig = plt.figure(figsize=(10,10))
     gs = GridSpec(nrows=2, ncols=2, width_ratios=[1, 1], height_ratios=[1, 1])
     gs.update(wspace = 0.3, hspace = 0.45)
@@ -307,10 +307,10 @@ def Plot_other_attributes_data(arg00, arg01, arg10, arg11):
     explode = (0, 0, 0)
     Pie_plot(ax11, df11, title_name, explode, colors)
    
-    return
+    return plt.savefig('Plots/Other_attribures_plot.pdf', bbox_inches='tight')
 
-def Plot_social_economic_data(arg00, arg01, arg02, arg10, arg11):
-    
+def Plot_social_economic_data(arg00, arg01, arg02, arg10, arg11, arg12):
+    ''' Show a dashboard with all features related to social and economic data '''
     fig = plt.figure(figsize=(15,10))
     gs = GridSpec(nrows=2, ncols=3, width_ratios=[1, 1 , 1], height_ratios=[1, 1])
     gs.update(wspace = 0.3, hspace = 0.45)
@@ -328,7 +328,7 @@ def Plot_social_economic_data(arg00, arg01, arg02, arg10, arg11):
             ax.set_xticks([])
             ax.set_yticks([])
 
-    ########### Duration #####################
+    ########### emp.var.rate #####################
     df00 = arg00[0]
     title_name = arg00[1]
     list_values = df00.unique().tolist()
@@ -337,7 +337,7 @@ def Plot_social_economic_data(arg00, arg01, arg02, arg10, arg11):
     ax00 = fig.add_subplot(gs[0,0])
     Barh_plot_custom_list(ax00, df00, title_name, list_values)
     
-    ######### Contact #########################  
+    ######### cons.price.idx #########################  
     df01 = arg01[0]
     bin_size = arg01[1]
     min_bin = arg01[2]
@@ -351,7 +351,7 @@ def Plot_social_economic_data(arg00, arg01, arg02, arg10, arg11):
     ax01 = fig.add_subplot(gs[0,1])
     Histogram_plot(ax01, df01, title_name, xaxis_name, yaxis_name, min_bin, max_bin, bin_size, log_axis, stats)
     
-    ######### Contact #########################  
+    ######### cons.conf.idx #########################  
     df02 = arg02[0]
     bin_size = arg02[1]
     min_bin = arg02[2]
@@ -365,7 +365,7 @@ def Plot_social_economic_data(arg00, arg01, arg02, arg10, arg11):
     ax02 = fig.add_subplot(gs[0,2])
     Histogram_plot(ax02, df02, title_name, xaxis_name, yaxis_name, min_bin, max_bin, bin_size, log_axis, stats)
    
-    ########### Month #####################
+    ########### euribor3m #####################
     df10 = arg10[0]
     bin_size = arg10[1]
     min_bin = arg10[2]
@@ -379,7 +379,7 @@ def Plot_social_economic_data(arg00, arg01, arg02, arg10, arg11):
     ax10 = fig.add_subplot(gs[1,0])
     Histogram_plot(ax10, df10, title_name, xaxis_name, yaxis_name, min_bin, max_bin, bin_size, log_axis, stats)
     
-    ######### Day of week #########################
+    ######### nr.employed #########################
     df11 = arg11[0]
     title_name = arg11[1]
     list_values = df11.unique().tolist()
@@ -387,8 +387,17 @@ def Plot_social_economic_data(arg00, arg01, arg02, arg10, arg11):
     
     ax11 = fig.add_subplot(gs[1,1])
     Barh_plot_custom_list(ax11, df11, title_name, list_values)
+    
+    ######### nr.employed #########################
+    df12 = arg12[0]
+    title_name = arg12[1]
+    colors = ['royalblue','limegreen']
+    
+    explode = (0, 0)
+    ax12 = fig.add_subplot(gs[1,2])
+    Pie_plot(ax12, df12, title_name, explode, colors)
    
-    return
+    return plt.savefig('Plots/Social_and_economic_plot.pdf', bbox_inches='tight')
 
 
 
