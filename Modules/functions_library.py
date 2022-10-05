@@ -8,22 +8,27 @@ def ls1(path):
     """ lista los archivos de un directorio """
     return [obj for obj in listdir(path) if isfile(path + obj)]
 
-def fechas(df, column_to_look):
-    '''Agrupa y cuenta los datos en diferentes periodos y los agrega al dataframe original'''
-    column_to_look = str(column_to_look)
-    df['Datetime'] = pd.to_datetime(df[column_to_look],format='%Y-%m-%d').dt.date
-    df['Dia'] = pd.to_datetime(df[column_to_look], dayfirst=True).dt.day.astype('int')
-    df['Semana'] = pd.to_datetime(df[column_to_look], dayfirst=True).dt.isocalendar().week
-    df['Mes'] = pd.to_datetime(df[column_to_look], dayfirst=True).dt.month.astype('int')
-    df['Ano'] = pd.to_datetime(df[column_to_look], dayfirst=True).dt.year.astype('int')
-    df['Dia-Mes'] = pd.to_datetime(df[column_to_look], dayfirst=True).dt.strftime('%d-%m')
-    df['Semana-Ano'] = df['Semana'].astype(str)+'-'+df['Ano'].astype(str)
-    df['Dia_semana'] = pd.to_datetime(df[column_to_look], dayfirst=True).dt.dayofweek.astype('int')
-    return df
+def Classification_report_full(model, y_predition, y_test):
+    ''' Report of Model Performance (KPIs)'''
+    matrix = confusion_matrix(y_test, y_predition)
+    matrix = matrix.astype('float') / matrix.sum(axis=1)[:, np.newaxis]
+    
+    # Build the plot
+    plt.figure(figsize=(4,4))
+    sns.set(font_scale=1.4)
+    sns.heatmap(matrix, annot=True, annot_kws={'size':10},
+            cmap=plt.cm.Greens, linewidths=0.2)
 
-def Classification_report(model, y_predition, y_test):
-    print('Confusion Matrix: \n')
-    print(confusion_matrix(y_test, y_predition))
+    # Add labels to the plot
+    class_names = ['No', 'Yes']
+    tick_marks = np.arange(len(class_names))
+    tick_marks2 = tick_marks + 0.5
+    plt.xticks(tick_marks + 0.5, class_names, rotation=0)
+    plt.yticks(tick_marks2, class_names, rotation=0)
+    plt.xlabel('Predicted label')
+    plt.ylabel('True label')
+    plt.title('Confusion Matrix for Random Forest Model')
+    
     print('\nClassification Report:')
     print(classification_report(y_test, y_predition))
     accuracy = 100*accuracy_score(y_test, y_predition)
@@ -32,3 +37,6 @@ def Classification_report(model, y_predition, y_test):
     print('Accuracy: {:.2f}%'.format(accuracy))
     print('Average Error: {:0.2f} degrees.'.format(np.mean(errors)))
     return
+
+
+
