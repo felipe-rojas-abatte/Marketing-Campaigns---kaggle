@@ -32,10 +32,10 @@ def Classification_report_full(model, y_predition, y_test):
     print('\nClassification Report:')
     print(classification_report(y_test, y_predition))
     accuracy = 100*accuracy_score(y_test, y_predition)
-    errors = abs(y_predition - y_test)
+    errors = (y_predition - y_test)/len(y_predition)
     print('Model Performance:')
     print('Accuracy: {:.2f}%'.format(accuracy))
-    print('Average Error: {:0.2f} degrees.'.format(np.mean(errors)))
+    print('Average Error: {:0.2e}'.format(np.mean(errors)))
     return
 
 
