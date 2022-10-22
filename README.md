@@ -17,4 +17,4 @@ The repository folder structure is organized in the following way:
   * Input_data: (Folder containing the input database in csv format)  
   * Modules: (Python files with packages, libraries and functions for the project)
   * Plot: (Plot folder with output plots)
-  * Main.ipynb (Jupiter notebook with the main structure of the code)
+  * Main.ipynb (Jupiter notebook with the main structure of the code and the results)
