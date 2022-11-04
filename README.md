@@ -1,4 +1,4 @@
-# Marketing_Campaigns-kaggle
+# Marketing Campaigns - kaggle challenge
 
 This repository holds all the information and code used for accomplish the task.
 
